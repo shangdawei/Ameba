@@ -1,0 +1,94 @@
+include "IAR_ILINK_Parameters.icf";
+
+//-------------------------------------------------------------------------------------------------+
+// |0x1000-0000----------------0BC7|0BC8------0BFF|0C00 - 0x6F400 - 0x1006-FFFF|30000000...301FFFFF|
+// |----------ROM_USED_RAM---------|--------------|VECT - RO TAIL ---- DATA ---|HEAD RO  TAIL  DATA|
+// |                |---SIGNATURE--|----HEADER----|VECT - RO TAIL ---- DATA ---|HEAD RO  TAIL  DATA|
+// |0x1000------0BA7|0BA8--32--0BC7|0BC8--56--0BFF|0C00 - 0x73A8 -- 0x1000-7FA7|     RTL8195AM     |
+// | BTL:0x9800-0000|   0x9800-001F|0020-0x38-0057|0058 - 29608 --- 0x9800-7FFF|     RTL8711AM     |
+// | APP:0x9800-B000|-SDRAM_HEADER-|B020------B057|B058 - 0x6F400 - 0x9807-A458|98000000+Offset    |
+//-------------------------------------------------------------------------------------------------+
+//
+
+define memory mem with size                 = 4G;
+
+define symbol __size_cstack__               = 0x400;
+define symbol __size_heap__                 = 0x200;
+
+define symbol __HDR_start__                 = 0x10000BA8;
+define symbol __HDR_end__                   = 0x10000BFF;
+define symbol __VEC_start__                 = 0x10000C00;
+define symbol __VEC_end__                   = 0x10000FFF;
+define symbol __RAM_start__                 = 0x10001000;
+define symbol __RAM_end__                   = 0x1006FFFF;
+define symbol __TCM_start__                 = 0x1FFF0000;
+define symbol __TCM_end__                   = 0x1FFFFFFF;
+define symbol __SDR_start__                 = 0x30000000;
+define symbol __SDR_end__                   = 0x301FFFFF;
+
+if ( __HAS_SDRAM__ > 0 )                    {
+define region SDR_region                    = mem:[from __SDR_start__  to __SDR_end__]; }
+
+define region HDR_region                    = mem:[from __HDR_start__  to __HDR_end__];
+define region VEC_region                    = mem:[from __VEC_start__  to __VEC_end__];
+//define region RAM_region                  = mem:[from __RAM_start__  to __RAM_end__];
+define region RAM_region                    = mem:[from __VEC_start__  to __RAM_end__];
+define region TCM_region                    = mem:[from __TCM_start__  to __TCM_end__];
+
+if ( __HAS_SDRAM__ > 0 )                    {
+define region RW_region                     = RAM_region | SDR_region ; }
+else {
+define region RW_region                     = RAM_region; }
+
+define block CSTACK                         with alignment = 8, size = __size_cstack__ { };
+define block HEAP                           with alignment = 8, size = __size_heap__ { };
+define block VECT                           { ro section .intvec };
+define block TEXTRW                         { section .textrw };
+
+do not initialize                           { section .noinit };
+initialize by copy with packing = none      { readwrite };
+
+if ( __GEN_IMAGE__ > 0 ) {
+define block HDR                            { ro section .image.head };
+"HEADER": place in HDR_region               { block HDR }; }
+
+// Define RAM_RO Block and Place
+if ( __GEN_IMAGE__ > 0 )
+{
+  define block RAM_RO with fixed order      { block VECT, readonly, ro section .image.tail };
+}
+else
+{
+  define block RAM_RO with fixed order      { block VECT, readonly };
+}
+
+// RAM_RO [ section readonly ] : RAM_RW [ section readwrite ]
+//"VECT": place at start of VEC_region      { block VECT };
+"RAM_RO": place at start of RAM_region      { block RAM_RO };
+
+"RAM_RW": place in RW_region                { readwrite };
+
+"TEXTRW": place at end of RAM_region        { block TEXTRW };
+
+"DYNMEM": place at start of TCM_region      { block HEAP };
+"CSTACK": place at end of TCM_region        { block CSTACK };
+
+// Define SDR_RO Block and Place
+if ( __HAS_SDRAM__ > 0 )
+{
+  define block SDR_RW                       { section .sdram.rw };
+
+  if ( __GEN_IMAGE__ > 0 )
+  {
+    define block SDR_RO with fixed order    {
+    readonly section .sdram.head, readonly section .sdram.ro, ro section .sdram.tail };
+  }
+  else
+  {
+    define block SDR_RO with fixed order    { readonly section .sdram };
+  }
+
+  // SDRAM :: [ SDR_RW : RW : ... : SDR_RO ]
+  "SDR_RO": place at end of SDR_region      { block SDR_RO };
+  "SDR_RW": place in SDR_region             { block SDR_RW };
+}

@@ -1,0 +1,33 @@
+[FILEFORMAT]
+rev=1.6
+
+[CHIP]
+name=RTL8711AM
+endiansupport=le
+thumbsupport=true
+armsupport=false
+fpu=None
+SIMD=false
+JTAG=true
+RTCK=false
+CJTAG=false
+SWD=true
+SWO_TraceD0=false
+SWO_clock=166.0
+DeviceMacros=$PROJ_DIR$\..\..\Config\RTL8195AM.mac
+
+[CORE]
+name=Cortex-M3
+
+[DDF FILE]
+name=RealTek\RTL8195AM.ddf
+
+[LINKER FILE]
+name=$PROJ_DIR$\..\..\Config\RTL8195AM.icf
+
+[FLASH LOADER]
+name=$PROJ_DIR$\..\..\Config\RTL8195AM.out
+little=$PROJ_DIR$\..\..\Config\RTL8195AM.board
+big=
+args=
+

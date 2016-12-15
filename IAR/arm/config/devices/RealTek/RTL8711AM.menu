@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<optionMenuItem>
+  <tag>RTL8711AM</tag>
+  <display>RTL8711AM</display>
+  <data>$CUR_DIR$\RTL8711AM.i79</data>
+</optionMenuItem>

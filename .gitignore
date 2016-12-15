@@ -1,0 +1,11 @@
+# IAR Project files
+settings
+*.dep
+*.ewd
+*.ewt
+
+# Object files
+*.o
+
+# Executables
+*.out

@@ -1,0 +1,22 @@
+/* Include all public symbols ending in _pub
+ * A symbol with a name that matches the pattern will be included
+ * in the output file unless this is overridden by a later hide directive.
+ */
+
+show *
+
+/* Do not include public symbols
+ * A symbol with a name that matches the pattern will not be included
+ * in the output file unless this is overridden by a later show directive.
+ */
+
+hide $*
+
+hide Reset_Handler
+hide UartLogHistoryBuf
+hide UartLogBuf
+hide UartLogCtl
+hide ArgvArray
+hide pUartLogCtl
+
+hide __dummy_entry__

@@ -1,0 +1,83 @@
+define symbol __ICFEDIT_region_ROM_CODE_start__   = 0x00000000;
+define symbol __ICFEDIT_region_ROM_CODE_end__     = 0x000FFFFF;
+
+define symbol __ICFEDIT_region_ROM_DATA_start__   = 0x10000000;
+define symbol __ICFEDIT_region_ROM_DATA_end__     = 0x10005FFF;
+
+define symbol __ICFEDIT_region_APP_CODE_start__   = 0x10000BC8;
+define symbol __ICFEDIT_region_APP_CODE_end__     = 0x10000FFF;
+
+define symbol __ICFEDIT_region_APP_DATA_start__   = 0x10001000;
+define symbol __ICFEDIT_region_APP_DATA_end__     = 0x1006FFFF;
+
+define symbol __ICFEDIT_region_TCM_CODE_start__   = 0x1FFF0000;
+define symbol __ICFEDIT_region_TCM_CODE_end__     = 0x1FFFFFFF;
+
+define memory mem with size               = 4G;
+define symbol __size_cstack__             = 0x400;
+define symbol __size_heap__               = 0x200;
+
+define region ROM_CODE_region             = mem:[from __ICFEDIT_region_ROM_CODE_start__   to __ICFEDIT_region_ROM_CODE_end__];
+define region APP_CODE_region             = mem:[from __ICFEDIT_region_APP_CODE_start__   to __ICFEDIT_region_APP_CODE_end__];
+define region ROM_DATA_region             = mem:[from __ICFEDIT_region_ROM_DATA_start__   to __ICFEDIT_region_ROM_DATA_end__];
+define region APP_DATA_region             = mem:[from __ICFEDIT_region_APP_DATA_start__   to __ICFEDIT_region_APP_DATA_end__];
+define region TCM_region                  = mem:[from __ICFEDIT_region_TCM_CODE_start__   to __ICFEDIT_region_TCM_CODE_end__];
+
+define block CSTACK                       with alignment = 8, size = __size_cstack__ { };
+define block HEAP                         with alignment = 8, size = __size_heap__ { };
+
+/*
+define exported symbol UartLogBuf                 = 0x100003ac;
+define exported symbol UartLogCtl                 = 0x10000384;
+define exported symbol pUartLogCtl                = 0x100006a8;
+define exported symbol UartLogHistoryBuf          = 0x1000042c;
+define exported symbol ArgvArray                  = 0x100006ac;
+*/
+
+define exported symbol __rom_bss_start__          = 0x10000300; 	  // use in rom
+define exported symbol __rom_bss_end__            = 0x10000bc8;	    // use in rom
+define exported symbol __ram_start_table_start__  = 0x10000bc8;	    // use in rom
+define exported symbol __image1_validate_code__   = 0x10000bdc;	    // needed by ram code
+define exported symbol _rtl_impure_ptr            = 0x10001c60;		  // for standard library
+
+define block .vector_table with fixed order{section .ram_dedecated_vector_table*};
+define block .user_vector_table with fixed order{section .ram_user_define_irq_table*};
+define block .user_data_table with fixed order{section .ram_user_define_data_table*};
+
+define block .rom.bss with fixed order
+{
+  section .hal.ram.bss* object hal_misc.o,
+  section .hal.ram.bss* object hal_pinmux.o,
+  section .hal.ram.bss* object diag.o,
+  section .hal.ram.bss* object rtl8195a_ssi_rom.o,
+  section .hal.ram.bss* object rtl8195a_gpio.o,
+  section .hal.ram.bss*,
+  section .timer2_7_vector_table.data*,
+  section .infra.ram.bss*,
+  section .mon.ram.bss* object RTL8195AM_ROM.o,
+  section .wlan_ram_map* object rom_wlan_ram_map.o,
+  section .wlan_ram_map*,
+  section .libc.ram.bss*,
+};
+
+keep { section .rom};
+
+keep { section .ram_dedecated_vector_table*};
+keep { section .ram_user_define_irq_table*};
+keep { section .ram_user_define_data_table*};
+
+do not initialize   { section * };
+do not initialize   { readwrite };
+
+place at start of ROM_CODE_region { section .rom };
+place at start of ROM_DATA_region {
+  block .vector_table,
+  block .user_vector_table,
+  block .user_data_table,
+  block .rom.bss };
+
+"DYNMEM": place at start of TCM_region { block HEAP };
+"CSTACK": place at end of TCM_region { block CSTACK };
+place in APP_CODE_region { ro };
+place in APP_DATA_region { rw };
+

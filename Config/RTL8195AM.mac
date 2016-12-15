@@ -1,0 +1,350 @@
+//--------------------------------------------------------------------------------------------------
+// Debugging Code In Flash : Options --> Debugger --> Download --> Use flash loader(s) is checked
+//--------------------------------------------------------------------------------------------------
+//
+// Debugger Start
+// JTAG in low Freq
+// CPU Reset ***************************************************************************************
+// CPU Halted
+//
+// ** execUserFlashInit()
+// JTAG in High Freq
+// Flashloader is loaded to RAM
+// ** execUserFlashReset()
+// Loader load image to flash
+// CPU Halted
+// ** execUserFlashExit()
+//
+// CPU Reset ***************************************************************************************
+// CPU Halted
+// ** execUserPreload()
+//
+// Verity loaded image
+// ** execUserReset()
+// ** execUserSetup()
+// Debugger is ready to work
+//--------------------------------------------------------------------------------------------------
+// Reset :: execUserFlashInit() :: execUserFlashReset() :: execUserFlashExit()
+// Reset :: execUserPreload() :: execUserReset() :: execUserSetup()
+
+
+//--------------------------------------------------------------------------------------------------
+// Debugging Code In RAM : Options --> Debugger --> Download --> Use flash loader(s) is unchecked
+//--------------------------------------------------------------------------------------------------
+//
+// Debugger Start
+// JTAG in low Freq
+// CPU Reset ***************************************************************************************
+// CPU Halted
+//
+// ** execUserPreload()
+// JTAG in High Freq
+// image is loaded to RAM
+//
+// Verity loaded image
+// ** execUserReset()
+// ** execUserSetup()
+// Debugger is ready to work
+//--------------------------------------------------------------------------------------------------
+// Reset :: execUserPreload() :: execUserReset() :: execUserSetup()
+
+//--------------------------------------------------------------------------------------------------
+//Global Var
+__var isFlashLoaderUsed;
+
+// ( v40000210 & 0x80000000 ) : boot from flash[0x0020]
+// ( v40000210 & 0x20000000 ) : boot from flash[0x0024]
+// ( v40000210 & 0x10000000 ) : boot from flash[0x0028]
+// ( v40000210 & 0x08000000 ) : boot from flash[0x002C]
+// ( v40000210 & 0x04000000 ) : boot from flash[0x0030]
+
+// Boot from 0x10000bc8 after image1 is copied from flash to 0x10000bc8
+bootFromFlash()
+{
+  __var tmp;
+  tmp = __readMemory32( 0x40000210, "Memory" );
+  tmp |= ( 1 << 21 ); // 0x00211157
+  __writeMemory32( tmp, 0x40000210, "Memory" );
+  __delay( 10 );
+}
+
+// Boot from 0x10000bc8 after image is loaded to 0x10000bc8 by JLink
+// ( v400001F4 & 0x8000000 ) && ( v40000210 & 0x80000000 )
+bootFromSram()
+{
+  __var tmp;
+  tmp = __readMemory32( 0x40000210, "Memory" );
+  tmp |= ( 1 << 27 ); // 0x08011117
+  __writeMemory32( tmp, 0x40000210, "Memory" );
+  __delay( 10 );
+}
+
+setupMaxSpeed()
+{
+  __var emulatorSpeed;
+
+  // __emulatorSpeed(speed)
+  // speed : __emulatorSpeed in Hz.
+  // Use 0 (zero) to make the speed automatically detected.
+  // Use -1 for adaptive speed (only for emulators supporting adaptive speed : RTCK).
+  // For JTAG interfaces, this is the JTAG clock frequency as seen on the TCK signal.
+  // ReturnValue : speed before set new speed
+  //
+  emulatorSpeed = __emulatorSpeed(15000000);
+  emulatorSpeed = __emulatorSpeed(15000000);
+  __message "JTAG Speed is set to: ", emulatorSpeed/1000:%d, " kHz";
+
+  if ( emulatorSpeed < 15000000 )
+  {
+    emulatorSpeed = __emulatorSpeed( 12000000 );
+    emulatorSpeed = __emulatorSpeed( 12000000 );
+    //__message "JTAG Speed is set to: ", emulatorSpeed:%d;
+    __message "JTAG Speed is set to: ", emulatorSpeed/1000:%d, " kHz";
+
+    // Unsuccessful; the speed is not supported by the emulator
+    if ( emulatorSpeed < 12000000 )
+    {
+      emulatorSpeed = __emulatorSpeed( 8000000 );
+      emulatorSpeed = __emulatorSpeed( 8000000 );
+      __message "JTAG Speed is set to: ", emulatorSpeed/1000:%d, " kHz";
+
+      if ( emulatorSpeed < 8000000 )
+      {
+        emulatorSpeed = __emulatorSpeed( 6000000 );
+        emulatorSpeed = __emulatorSpeed( 6000000 );
+        __message "JTAG Speed is set to: ", emulatorSpeed/1000:%d, " kHz";
+
+        if ( emulatorSpeed < 6000000 )
+        {
+          // Sets the emulator speed to be automatically detected
+          emulatorSpeed = __emulatorSpeed( 0 );
+          emulatorSpeed = __emulatorSpeed( 0 );
+          __message "JTAG Speed is set to: ", emulatorSpeed/1000:%d, " kHz";
+        }
+      }
+    }
+  }
+}
+
+setupSpiFlash()
+{
+  __message "---------------------------- >>>>>> SPI Flash Setup -----------------------";
+
+  __var tmp;
+  tmp = __readMemory32( 0x40000230, "Memory" );
+  tmp |= 0x300;
+  __writeMemory32( tmp, 0x40000230, "Memory" ); // enable spi flash peripheral clock
+  __delay( 10 );
+
+  tmp = __readMemory32( 0x40000210, "Memory" );
+  tmp |= 0x10;
+  __writeMemory32( tmp, 0x40000210, "Memory" ); // enable spi flash peripheral
+  __delay( 10 );
+
+  tmp = __readMemory32( 0x400002C0, "Memory" );
+  tmp = ( tmp & 0xFFFFFFF8 ) | 1 ;
+  __writeMemory32( tmp, 0x400002C0, "Memory" ); // enable spi flash pins
+  __delay( 10 );
+
+  __writeMemory32( 0x0, 0x40006008, "Memory" );  // disable SPI FLASH operation
+  __delay( 10 );
+
+  __writeMemory32( 0x0, 0x4000602C, "Memory" );  // disable all interrupts
+  __delay( 10 );
+
+  __writeMemory32( 0x1, 0x40006010, "Memory" );  // use first "slave select" pin
+  __delay( 10 );
+
+  __writeMemory32( 0x2, 0x40006014, "Memory" );  // baud rate, default value, SystemCoreClock/2
+  __delay( 10 );
+
+  __writeMemory32( 0x0, 0x40006018, "Memory" );  // tx fifo threshold
+  __delay( 10 );
+
+  __writeMemory32( 0x0, 0x4000601C, "Memory" );  // rx fifo threshold
+  __delay( 10 );
+
+  __writeMemory32( 0x0, 0x4000604C, "Memory" );  // disable DMA
+  __delay( 10 );
+  // now spi flash is ready to read directly
+  __message "---------------------------- <<<<<< SPI Flash Setup -----------------------";
+}
+
+setupSystem()
+{
+  __message "---------------------------- >>>>>> System Setup --------------------------";
+  __var tmp;
+  // __hwResetWithStrategy(halt_delay, strategy)
+  // halt_delay : in milliseconds, between the end of the reset pulse and the halt of the CPU.
+  //              Use 0 to make the CPU halt immediately after reset only when strategy is set to 0.
+  // strategy :
+  //
+  // Resets the CPU and halts it using a breakpoint at memory address zero. ------------------------
+  // __hwResetWithStrategy( 0, 1 );
+  // __hwReset(halt_delay)
+
+  // Resets the CPU and halts it, 1 ms between the end of the reset pulse and the halt of the CPU
+  //__hwReset( 1 );
+  // __writeMemory32(value, address, zone)
+  // value : An integer.
+  // address : The memory address (integer).
+  //
+  // Setup SystemCoreClock at 166.666666 MHz --------------------------------------------------------
+  __writeMemory32( 0x01, 0x40000014, "Memory" );  // CLK_CTRL1
+  // __delay(value)
+  // value : The number of milliseconds to delay execution
+  __delay( 10 );
+  // System Init -----------------------------------------------------------------------------------
+  __writeMemory32( 0x1FC00002, 0x40000304, "Memory" );  // PESOC_SOC_CTRL
+  __delay( 10 );
+  __writeMemory32( 0x400, 0x40000250, "Memory" );  // PESOC_CLK_SEL
+  __delay( 10 );
+  __writeMemory32( 0x0, 0x40000340, "Memory" );  // GPIO_PULL_CTRL4
+  __delay( 10 );
+  __writeMemory32( 0xdcc4, 0x40000230, "Memory" );  // PESOC_CLK_CTRL
+  __delay( 10 );
+  // FUN|OCP|LXBUS|FLASH|CPU|LOG_UART|GTIMER|SECURITY_ENGINE
+  __writeMemory32( 0x00011117, 0x40000210, "Memory" );  // SOC_FUNC_EN
+  __delay( 10 );
+  // FUN|OCP|LXBUS|FLASH|CPU|LOG_UART|GTIMER|SECURITY_ENGINE + MEM_CTRL
+  __writeMemory32( 0x00011157, 0x40000210, "Memory" );  // SOC_FUNC_EN
+  __delay( 10 );
+  // SPI_FLASH_PIN_EN|SDR_PIN_EN|SWD_PIN_EN|LOG_UART_PIN_EN ?
+  __writeMemory32( 0x110011, 0x400002c0, "Memory" );  // CPU_PERIPHERAL_CTRL
+  __delay( 10 );
+  __writeMemory32( 0xffffffff, 0x40000320, "Memory" );  // GPIO_SHTDN_CTRL
+  __delay( 10 );
+
+  //__writeMemory32( 0x0006005e, 0x40000300, "Memory" );  // PESOC_MEM_CTRL
+  //__delay( 10 );
+  __message "---------------------------- <<<<<< System Setup --------------------------";
+}
+
+execUserCoreConnect()
+{
+  __var tmp;
+  __message "---------------------------- >>>>>> User Core Connect --------------------";
+  __message "---------------------------- <<<<<< User Core Connect --------------------";
+}
+
+execUserExecutionStarted0()
+{
+  __var tmp;
+  __message "---------------------------- >>>>>> User Execution Started ---------------";
+  __message "---------------------------- <<<<<< User Execution Started ---------------";
+}
+
+execUserExecutionStopped0()
+{
+  __var tmp;
+  __message "---------------------------- >>>>>> User Execution Stopped ---------------";
+  __message "---------------------------- <<<<<< User Execution Stopped ---------------";
+}
+
+//--------------------------------------------------------------------------------------------------
+// Used for Debugging Code In Flash Only
+//
+// Called by debugger before loading flash loader in RAM
+execUserFlashInit()
+{
+  __var tmp;
+  __message "---------------------------- >>>>>> User Flash Init -----------------------";
+  isFlashLoaderUsed = 1;
+
+  setupMaxSpeed();
+
+  setupSystem();
+
+  setupSpiFlash();
+  __message "---------------------------- <<<<<< User Flash Init -----------------------";
+}
+
+execUserFlashReset()
+{
+  __var tmp;
+  __message "---------------------------- >>>>>> Flash Reset ---------------------------";
+  __message "---------------------------- <<<<<< Flash Reset ---------------------------";
+}
+
+execUserFlashExit()
+{
+  __var tmp;
+  __message "---------------------------- >>>>>> Flash Exit ----------------------------";
+  __message "---------------------------- <<<<<< Flash Exit ----------------------------";
+}
+
+loadCSPY_Parameters()
+{
+  __registerMacroFile("$PROJ_DIR$\\Config\\IAR_CSPY_Parameters.mac");
+}
+//--------------------------------------------------------------------------------------------------
+// Used for Debugging Code In both Flash and RAM
+// execUserPreload() is executed before the code download takes place
+//
+// Called after communication with the target system is established
+// but before downloading the target application.
+//
+// Implement this macro to initialize memory locations and/or registers
+// which are vital for loading data properly.
+execUserPreload()
+{
+  __var tmp;
+  __message "---------------------------- >>>>>> User Preload --------------------------";
+
+  loadCSPY_Parameters();
+  setupMaxSpeed();
+  setupSystem();
+  setupSpiFlash();
+  if ( HAS_SDRAM )
+  {
+    __registerMacroFile("$PROJ_DIR$\\Config\\RTL8195AM_SDRAM.mac");
+    setupSdram();
+  }
+
+  __loadImage("$PROJ_DIR$\\MCU\\rtl8195am_rom.out", 0, 1);
+
+  __message "---------------------------- <<<<<< User Preload --------------------------";
+}
+
+// Called each time just before the reset command is issued.
+// Implement this macro to set up any required device state.
+execUserPreReset()
+{
+  __var tmp;
+  __message "---------------------------- >>>>>> User PreReset -------------------------";
+
+  // Software reset was performed
+  // Target reset
+  // execUserReset() will be called
+  __message "---------------------------- <<<<<< User PreReset -------------------------";
+}
+
+// Called each time just after the reset command is issued.
+// Implement this macro to set up and restore data.
+execUserReset()
+{
+  __var tmp;
+  __message "---------------------------- >>>>>> User Reset ----------------------------";
+  __message "---------------------------- <<<<<< User Reset ----------------------------";
+}
+
+// Called once after the target application is downloaded.
+// Implement this macro to set up the memory map, breakpoints, interrupts,
+// register macro files, etc.
+execUserSetup()
+{
+  __var tmp;
+  __message "---------------------------- >>>>>> User Setup ----------------------------";
+  __message "---------------------------- <<<<<< User Setup ----------------------------";
+}
+
+// Called once when the debug session ends.
+// Implement this macro to save status data etc.
+// Unregister macro files, etc.
+execUserExit()
+{
+  __var tmp;
+  __message "---------------------------- >>>>>> User Exit -----------------------------";
+  __message "---------------------------- <<<<<< User Exit -----------------------------";
+}
+

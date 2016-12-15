@@ -1,0 +1,4 @@
+// Automatically generated content, Don't touch!
+
+define symbol __HAS_SDRAM__=1;
+define symbol __GEN_IMAGE__=1;
