@@ -973,6 +973,15 @@
     <file>
       <name>$PROJ_DIR$\..\..\Config\RTL8195AM_ROM.txt</name>
     </file>
+    <file>
+      <name>$PROJ_DIR$\..\..\Config\RTL8195AM_V02.icf</name>
+    </file>
+  </group>
+  <group>
+    <name>ObjDump</name>
+    <file>
+      <name>$PROJ_DIR$\ROMExporter.log</name>
+    </file>
   </group>
   <file>
     <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_rom.c</name>

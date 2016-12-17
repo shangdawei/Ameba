@@ -8,7 +8,7 @@
 #define RTL8711AM 2
 #define RTL8195AM 3
 
-#define __DEVICE_NAME__ RTL8711AM
+#define __DEVICE_NAME__ RTL8195AM
 
 #define __HAS_SDRAM__ 1
 

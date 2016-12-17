@@ -5,8 +5,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-extern uint32_t UserIrqFunTable[32];
-extern uint32_t __vectors_table;
+#include "rtl8195am_diag.h"
+#include "rtl8195am_peri_on.h"
 
 void HPTask( void * Arg )
 {
@@ -26,17 +26,19 @@ void LPTask( void * Arg )
 
 int main( void )
 {
-  UserIrqFunTable[0] = __vectors_table;
+  DBG_SPIF_INFO( "%x", 0, 0 );
 
-  SystemCoreClockUpdate();
+  UART2_BD_FCTRL(0);
 
-  osKernelInitialize();
+  SystemCoreClockUpdate( );
+
+  osKernelInitialize( );
 
   osThreadNew( LPTask, NULL, NULL );
   osThreadNew( HPTask, NULL, NULL );
 
-  if ( osKernelGetState() == osKernelReady )
-    osKernelStart();
+  if ( osKernelGetState( ) == osKernelReady )
+    osKernelStart( );
 
   while ( 1 )
   {

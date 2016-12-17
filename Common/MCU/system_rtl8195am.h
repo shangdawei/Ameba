@@ -10,15 +10,16 @@ extern "C"
 
 #include <rtl8195am_types.h>
 
-#define __HSI             ( 8000000UL)
-#define __XTAL            ( 5000000UL)            /* Oscillator frequency             */
-#define __SYSTEM_CLOCK    (200000000UL/6*5)       /* System Core frequency            */
 
 extern uint32_t SystemCoreClock;
+
+extern void SystemPrepare( void );
 
 extern void SystemInit( void );
 
 extern void SystemCoreClockUpdate( void );
+
+extern void SystemCoreClockSetup( uint32_t NewSystemCoreClock );
 
 extern uint32_t SystemCoreClockGet( void );
 

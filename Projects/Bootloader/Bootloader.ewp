@@ -60,16 +60,16 @@
         <option>
           <name>GRuntimeLibSelect</name>
           <version>0</version>
-          <state>1</state>
+          <state>2</state>
         </option>
         <option>
           <name>GRuntimeLibSelectSlave</name>
           <version>0</version>
-          <state>1</state>
+          <state>2</state>
         </option>
         <option>
           <name>RTDescription</name>
-          <state>Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
+          <state>Use the full configuration of the C/C++ runtime library. Full locale interface, C locale, file descriptor support, multibytes in printf and scanf, and hex floats in strtod.</state>
         </option>
         <option>
           <name>OGProductVersion</name>
@@ -123,7 +123,7 @@
         </option>
         <option>
           <name>RTConfigPath2</name>
-          <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Normal.h</state>
+          <state>$TOOLKIT_DIR$\INC\c\DLib_Config_Full.h</state>
         </option>
         <option>
           <name>GBECoreSlave</name>
@@ -314,6 +314,7 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
+          <state>$PROJ_DIR$\..\..\Common\Compiler</state>
           <state>$PROJ_DIR$\..\..\Common\RTOS</state>
           <state>$PROJ_DIR$\..\..\Common\MCU</state>
           <state>$PROJ_DIR$\..\..\Config</state>
@@ -1277,6 +1278,7 @@
         </option>
         <option>
           <name>CCIncludePath2</name>
+          <state>$PROJ_DIR$\..\..\Common\Compiler</state>
           <state>$PROJ_DIR$\..\..\Common\RTOS</state>
           <state>$PROJ_DIR$\..\..\Common\MCU</state>
           <state>$PROJ_DIR$\..\..\Config</state>
@@ -1931,9 +1933,15 @@
   <group>
     <name>Common</name>
     <group>
+      <name>Compiler</name>
+      <file>
+        <name>$PROJ_DIR$\..\..\Common\Compiler\generic_types.h</name>
+      </file>
+    </group>
+    <group>
       <name>MCU</name>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am.h</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\RTL8195AM.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_adc.c</name>
@@ -1942,7 +1950,16 @@
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_adc.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_all.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_compiler.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_consol.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_consol.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_crypto.c</name>
@@ -1957,13 +1974,16 @@
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_dac.h</name>
       </file>
       <file>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_diag.h</name>
+      </file>
+      <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_efuse.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_efuse.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_extra.h</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_errno.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_gdma.c</name>
@@ -2035,21 +2055,6 @@
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_pcm.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_peri_on.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_peri_on.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_pinmux.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_pinmux.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_platform.h</name>
-      </file>
-      <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_pwm.c</name>
       </file>
       <file>
@@ -2071,10 +2076,10 @@
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_rtos.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdio.c</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdio_device.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdio.h</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdio_device.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdio_host.c</name>
@@ -2089,16 +2094,7 @@
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdr.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdr_controller.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdr_controller.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_spi_flash.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_spi_flash.h</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_section.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_spic.c</name>
@@ -2113,10 +2109,10 @@
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_ssi.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sys_on.c</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_system.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sys_on.h</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_system.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_timer.c</name>
@@ -2140,16 +2136,10 @@
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_usb.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_util.c</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_wdg.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_util.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_wdt.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_wdt.h</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_wdg.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_wifi.c</name>
@@ -2164,7 +2154,7 @@
         <name>$PROJ_DIR$\..\..\Common\MCU\system_rtl8195am.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\system_rtl8195am.h</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\system_RTL8195AM.h</name>
       </file>
     </group>
     <group>
@@ -2390,6 +2380,7 @@
             </option>
             <option>
               <name>CCIncludePath2</name>
+              <state>$PROJ_DIR$\..\..\Common\Compiler</state>
               <state>$PROJ_DIR$\..\..\Common\RTOS</state>
               <state>$PROJ_DIR$\..\..\Common\MCU</state>
               <state>$PROJ_DIR$\..\..\Config</state>
@@ -2797,6 +2788,9 @@
   </group>
   <group>
     <name>Source</name>
+    <file>
+      <name>$PROJ_DIR$\Source\dummy.c</name>
+    </file>
     <file>
       <name>$PROJ_DIR$\Source\main.c</name>
     </file>

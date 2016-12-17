@@ -2,419 +2,546 @@
 #define __RTL8195AM_MISC_H__
 
 #ifdef __cplusplus
- extern "C" {
+extern "C"
+{
 #endif /* __cplusplus */
 
 #include "rtl8195am.h"
+#include "rtl8195am_conf.h"
+#include "rtl8195am_types.h"
+#include "rtl8195am_macro.h"
+#include "rtl8195am_compiler.h"
 
-#define PLATFORM_LITTLE_ENDIAN                  0
-#define PLATFORM_BIG_ENDIAN                     1
+// ToDo
+typedef fpos_t _fpos_t;
+typedef unsigned long __ULong;
+typedef struct _Bigint _Bigint;
+typedef struct _reent _reent;
+typedef size_t _ssize_t;
 
-#define ROMVERSION                0x03
-#define ROMINFORMATION            (ROMVERSION)
-
-#define TIMER_CLK                 ( 32*1000 )
-#define SYSTEM_CLK                SystemCoreClock
-#define SYSTEM_ENDIAN             PLATFORM_LITTLE_ENDIAN
-
-// ---------------------------------------------------------------------------------------------------------------------
-// hal_platform.h
-// ---------------------------------------------------------------------------------------------------------------------
-enum _BOOT_TYPE_
-{
-  BOOT_FROM_FLASH = 0,
-  BOOT_FROM_SDIO = 1,
-  BOOT_FROM_USB = 2,
-  BOOT_FROM_RSVD = 3,
-};
-
-#define CPU_CLK_TYPE_NO             6
-
-enum _EFUSE_CPU_CLK_
-{
-  CLK_200M = 0,
-  CLK_100M = 1,
-  CLK_50M = 2,
-  CLK_25M = 3,
-  CLK_12_5M = 4,
-  CLK_4M = 5,
-};
-
-// ---------------------------------------------------------------------------------------------------------------------
-// RTL8195AM Only
-//
-#define _SUCCESS        ( 1 )
-#define _FAIL           ( 0 )
-
-typedef enum _RTK_STATUS_
-{
-  _EXIT_SUCCESS = 0,
-  _EXIT_FAILURE = 1
-} RTK_STATUS, *PRTK_STATUS;
-
-typedef struct
-{
-  volatile int counter;
-} atomic_t;
-
-typedef u32 dma_addr_t;
-
-typedef void (*proc_t)( void* );
-
-typedef unsigned int __kernel_size_t;
-typedef int __kernel_ssize_t;
-
-typedef __kernel_size_t SIZE_T;
-typedef __kernel_ssize_t SSIZE_T;
-
-#define FIELD_OFFSET(s,field)     ((SSIZE_T)&((s*)(0))->field)
-#define MEM_ALIGNMENT_OFFSET      (sizeof (SIZE_T))
-#define MEM_ALIGNMENT_PADDING     (sizeof(SIZE_T) - 1)
-#define SIZE_PTR                  SIZE_T
-#define SSIZE_PTR                 SSIZE_T
-
-#ifndef BIT0
-#define BIT0  0x0001
-#define BIT1  0x0002
-#define BIT2  0x0004
-#define BIT3  0x0008
-#define BIT4  0x0010
-#define BIT5  0x0020
-#define BIT6  0x0040
-#define BIT7  0x0080
-#define BIT8  0x0100
-#define BIT9  0x0200
-#define BIT10 0x0400
-#define BIT11 0x0800
-#define BIT12 0x1000
-#define BIT13 0x2000
-#define BIT14 0x4000
-#define BIT15 0x8000
-#define BIT16 0x00010000
-#define BIT17 0x00020000
-#define BIT18 0x00040000
-#define BIT19 0x00080000
-#define BIT20 0x00100000
-#define BIT21 0x00200000
-#define BIT22 0x00400000
-#define BIT23 0x00800000
-#define BIT24 0x01000000
-#define BIT25 0x02000000
-#define BIT26 0x04000000
-#define BIT27 0x08000000
-#define BIT28 0x10000000
-#define BIT29 0x20000000
-#define BIT30 0x40000000
-#define BIT31 0x80000000
+#ifndef _READ_WRITE_RETURN_TYPE
+#define _READ_WRITE_RETURN_TYPE         _ssize_t
 #endif
 
-#ifndef BIT_
-#define BIT_(__n)      (1<<(__n))
+#ifndef _READ_WRITE_BUFSIZE_TYPE
+#define _READ_WRITE_BUFSIZE_TYPE        int
 #endif
 
-#ifndef BIT
-#define BIT(__n)       (1<<(__n))
+#define __rom_mallocr_init              __rom_mallocr_init_v1_00
+#define __rtl_Balloc                    __rtl_Balloc_v1_00
+#define __rtl_Bfree                     __rtl_Bfree_v1_00
+#define __rtl_calloc_r                  __rtl_calloc_r_v1_00
+#define __rtl_cfree_r                   __rtl_cfree_r_v1_00
+#define __rtl_cmp                       __rtl_cmp_v1_00
+#define __rtl_d2b                       __rtl_d2b_v1_00
+#define __rtl_dadd                      __rtl_dadd_v1_00
+#define __rtl_dcmpeq                    __rtl_dcmpeq_v1_00
+#define __rtl_dcmpgt                    __rtl_dcmpgt_v1_00
+#define __rtl_dcmplt                    __rtl_dcmplt_v1_00
+#define __rtl_ddiv                      __rtl_ddiv_v1_00
+#define __rtl_diff                      __rtl_diff_v1_00
+#define __rtl_dmul                      __rtl_dmul_v1_00
+#define __rtl_dsub                      __rtl_dsub_v1_00
+#define __rtl_dtoa_r                    __rtl_dtoa_r_v1_00
+#define __rtl_dtoi                      __rtl_dtoi_v1_00
+#define __rtl_fflush_r                  __rtl_fflush_r_v1_00
+#define __rtl_free_r                    __rtl_free_r_v1_00
+#define __rtl_hi0bits                   __rtl_hi0bits_v1_00
+#define __rtl_i2b                       __rtl_i2b_v1_00
+#define __rtl_itod                      __rtl_itod_v1_00
+#define __rtl_lshift                    __rtl_lshift_v1_00
+#define __rtl_malloc_r                  __rtl_malloc_r_v1_00
+#define __rtl_memalign_r                __rtl_memalign_r_v1_00
+#define __rtl_memchr                    __rtl_memchr_v1_00
+#define __rtl_memcpy                    __rtl_memcpy_v1_00
+#define __rtl_memmove                   __rtl_memmove_v1_00
+#define __rtl_memset                    __rtl_memset_v1_00
+#define __rtl_mult                      __rtl_mult_v1_00
+#define __rtl_multadd                   __rtl_multadd_v1_00
+#define __rtl_pow5mult                  __rtl_pow5mult_v1_00
+#define __rtl_pvalloc_r                 __rtl_pvalloc_r_v1_00
+#define __rtl_realloc_r                 __rtl_realloc_r_v1_00
+#define __rtl_sbrk_r                    __rtl_sbrk_r_v1_00
+#define __rtl_sclose                    __rtl_sclose_v1_00
+#define __rtl_seofread                  __rtl_seofread_v1_00
+#define __rtl_sread                     __rtl_sread_v1_00
+#define __rtl_sseek                     __rtl_sseek_v1_00
+#define __rtl_strcmp                    __rtl_strcmp_v1_00
+#define __rtl_swrite                    __rtl_swrite_v1_00
+#define __rtl_uitod                     __rtl_uitod_v1_00
+#define __rtl_uitof                     __rtl_uitof_v1_00
+#define __rtl_valloc_r                  __rtl_valloc_r_v1_00
+#define __rtl_vfprintf_r                __rtl_vfprintf_r_v1_00
+
+extern uint32_t __rtl_errno;            // 0x10000bc4
+
+extern _LONG_CALL_ _Bigint * __rtl_Balloc_v1_00( _reent * ptr, int k );
+extern _LONG_CALL_ _Bigint * __rtl_d2b_v1_00( _reent * ptr, double _d, int * e, int * bits );
+extern _LONG_CALL_ _Bigint * __rtl_diff_v1_00( struct _reent* ptr, _Bigint * a, _Bigint * b );
+extern _LONG_CALL_ _Bigint * __rtl_i2b_v1_00( _reent * ptr, int i );
+extern _LONG_CALL_ _Bigint * __rtl_lshift_v1_00( _reent * ptr, _Bigint * b, int k );
+extern _LONG_CALL_ _Bigint * __rtl_mult_v1_00( _reent * ptr, _Bigint * a, _Bigint * b );
+extern _LONG_CALL_ _Bigint * __rtl_multadd_v1_00( _reent * ptr, _Bigint * b, int m, int a );
+extern _LONG_CALL_ _Bigint * __rtl_pow5mult_v1_00( _reent * ptr, _Bigint * b, int k );
+extern _LONG_CALL_ _fpos_t __rtl_sseek_v1_00( _reent * ptr, void * cookie, _fpos_t offset, int whence );
+
+extern _LONG_CALL_ _READ_WRITE_RETURN_TYPE __rtl_seofread_v1_00( struct _reent * _ptr, _PTR cookie, char * buf, _READ_WRITE_BUFSIZE_TYPE len);
+extern _LONG_CALL_ _READ_WRITE_RETURN_TYPE __rtl_sread_v1_00( _reent * ptr, void * cookie, char * buf,
+_READ_WRITE_BUFSIZE_TYPE n );
+extern _LONG_CALL_ _READ_WRITE_RETURN_TYPE __rtl_swrite_v1_00( _reent * ptr, void * cookie, char const * buf,
+_READ_WRITE_BUFSIZE_TYPE n );
+
+extern _LONG_CALL_ double __rtl_dadd_v1_00( double a, double b );
+extern _LONG_CALL_ double __rtl_ddiv_v1_00( double a, double b );
+extern _LONG_CALL_ double __rtl_dmul_v1_00( double a, double b );
+extern _LONG_CALL_ double __rtl_dsub_v1_00( double a, double b );
+extern _LONG_CALL_ double __rtl_itod_v1_00( int lval );
+extern _LONG_CALL_ double __rtl_uitod_v1_00( unsigned int lval );
+extern _LONG_CALL_ float __rtl_uitof_v1_00( unsigned int lval );
+extern _LONG_CALL_ int __rtl_cmp_v1_00( _Bigint * a, _Bigint * b );
+extern _LONG_CALL_ int __rtl_dcmpeq_v1_00( double a, double b );
+extern _LONG_CALL_ int __rtl_dcmpgt_v1_00( double a, double b );
+extern _LONG_CALL_ int __rtl_dcmplt_v1_00( double a, double b );
+extern _LONG_CALL_ int __rtl_dtoi_v1_00( double d );
+extern _LONG_CALL_ int __rtl_fflush_r_v1_00( _reent * ptr, register FILE * fp );
+extern _LONG_CALL_ int __rtl_hi0bits_v1_00( register __ULong x );
+extern _LONG_CALL_ int __rtl_sclose_v1_00( _reent * ptr, void * cookie );
+extern _LONG_CALL_ int __rtl_strcmp_v1_00( const char * s1, const char * s2 );
+extern _LONG_CALL_ int __rtl_vfprintf_r_v1_00( struct _reent *, FILE *, const char *, va_list );
+extern _LONG_CALL_ void * __rtl_memchr_v1_00( const void * src_void, int c, size_t length );
+extern _LONG_CALL_ void * __rtl_memcpy_v1_00( void * __restrict dst0, const void * __restrict src0, size_t len0 );
+extern _LONG_CALL_ void * __rtl_memmove_v1_00( void * dst_void, const void * src_void, size_t length );
+extern _LONG_CALL_ void * __rtl_memset_v1_00( void * m, int c, size_t n );
+extern _LONG_CALL_ void * __rtl_sbrk_r_v1_00( _reent * ptr, ptrdiff_t incr );
+extern _LONG_CALL_ void __rom_mallocr_init_v1_00( void );
+extern _LONG_CALL_ void __rtl_Bfree_v1_00( _reent * ptr, _Bigint * v );
+extern _LONG_CALL_ void __rtl_cfree_r_v1_00( void * mem );
+extern _LONG_CALL_ void __rtl_free_r_v1_00( RARG void* mem );
+extern _LONG_CALL_ void* __rtl_calloc_r_v1_00( RARG size_t n, size_t elem_size );
+extern _LONG_CALL_ void* __rtl_malloc_r_v1_00( RARG size_t bytes );
+extern _LONG_CALL_ void* __rtl_memalign_r_v1_00( RARG size_t alignment, size_t bytes );
+extern _LONG_CALL_ void* __rtl_pvalloc_r_v1_00( RARG size_t bytes );
+extern _LONG_CALL_ void* __rtl_realloc_r_v1_00( RARG void* oldmem, size_t bytes );
+extern _LONG_CALL_ void* __rtl_valloc_r_v1_00( RARG size_t bytes );
+
+extern char * __rtl_dtoa_r_v1_00( _reent * ptr, double _d, int mode, int ndigits, int * decpt, int * sign,
+  char * * rve );
+
+extern _LONG_CALL_ u32 HalDelayUs( u32 us );
+extern _LONG_CALL_ u32 HalGetCpuClk( VOID );
+extern _LONG_CALL_ u8 HalGetRomInfo( VOID );
+VOID HalSetResetCause( IN HAL_RESET_REASON reason );
+HAL_RESET_REASON HalGetResetCause( VOID );
+
+extern _LONG_CALL_ROM_ void *_memset( void *s, int c, SIZE_T n );
+extern _LONG_CALL_ROM_ void *_memcpy( void *s1, const void *s2, SIZE_T n );
+#if defined(CONFIG_RELEASE_BUILD_LIBRARIES) && (!defined(E_CUT_ROM_DOMAIN))
+// we built A/B/C cut ROM Lib with this wrong declaration, we need to keep the same for compatible
+extern _LONG_CALL_ROM_ int *_memcmp( const void *av, const void *bv, SIZE_T len );
+#else
+extern _LONG_CALL_ROM_ int _memcmp( const void *av, const void *bv, SIZE_T len );
 #endif
+extern _LONG_CALL_ROM_ SIZE_T _strlen( const char *s );
+extern _LONG_CALL_ROM_ int _strcmp( const char *cs, const char *ct );
 
-//port from fw by thomas
-//Belows are Sync from SD7-Driver. It is necessary to check correctness
+extern unsigned int rand_x;
 
-#define SWAP32(x) ((u32)(                         \
-      (((u32)(x) & (u32)0x000000ff) << 24) |            \
-      (((u32)(x) & (u32)0x0000ff00) <<  8) |            \
-      (((u32)(x) & (u32)0x00ff0000) >>  8) |            \
-      (((u32)(x) & (u32)0xff000000) >> 24)))
-
-#define WAP16(x) ((u16)(                         \
-      (((u16)(x) & (u16)0x00ff) <<  8) |            \
-      (((u16)(x) & (u16)0xff00) >>  8)))
-
-#if SYSTEM_ENDIAN == PLATFORM_LITTLE_ENDIAN
-#ifndef rtk_le16_to_cpu
-#define rtk_cpu_to_le32(x)    ((u32)(x))
-#define rtk_le32_to_cpu(x)    ((u32)(x))
-#define rtk_cpu_to_le16(x)    ((u16)(x))
-#define rtk_le16_to_cpu(x)    ((u16)(x))
-#define rtk_cpu_to_be32(x)    SWAP32((x))
-#define rtk_be32_to_cpu(x)    SWAP32((x))
-#define rtk_cpu_to_be16(x)    WAP16((x))
-#define rtk_be16_to_cpu(x)    WAP16((x))
-#endif
-
-#elif SYSTEM_ENDIAN == PLATFORM_BIG_ENDIAN
-#ifndef rtk_le16_to_cpu
-#define rtk_cpu_to_le32(x)    SWAP32((x))
-#define rtk_le32_to_cpu(x)    SWAP32((x))
-#define rtk_cpu_to_le16(x)    WAP16((x))
-#define rtk_le16_to_cpu(x)    WAP16((x))
-#define rtk_cpu_to_be32(x)    ((__u32)(x))
-#define rtk_be32_to_cpu(x)    ((__u32)(x))
-#define rtk_cpu_to_be16(x)    ((__u16)(x))
-#define rtk_be16_to_cpu(x)    ((__u16)(x))
-#endif
-#endif
+u32 Rand2( void );
+u32 Rand( VOID );
 
 /*
- *  Call endian free function when
- *    1. Read/write packet content.
- *    2. Before write integer to IO.
- *    3. After read integer from IO.
+ * Simple doubly linked list implementation.
+ *
+ * Some of the internal functions ("__xxx") are useful when
+ * manipulating whole lists rather than single entries, as
+ * sometimes we already know the next/prev entries and we can
+ * generate better code by using them directly rather than
+ * using the generic single-entry routines.
  */
+struct LIST_HEADER
+{
+  struct LIST_HEADER *Next, *Prev;
+};
 
-//
-// Byte Swapping routine.
-//
-#define EF1Byte (u8)
-#define EF2Byte   le16_to_cpu
-#define EF4Byte le32_to_cpu
+typedef struct LIST_HEADER _LIST;
 
-//
-// Read LE format data from memory
-//
-#define ReadEF1Byte(_ptr)   EF1Byte(*((u8 *)(_ptr)))
-#define ReadEF2Byte(_ptr)   EF2Byte(*((u16 *)(_ptr)))
-#define ReadEF4Byte(_ptr)   EF4Byte(*((u32 *)(_ptr)))
+#define RTL_LIST_CONTAINOR(ptr, type, member) \
+        ((type *)((char *)(ptr)-(SIZE_T)(&((type *)0)->member)))
 
-//
-// Write LE data to memory
-//
-#define WriteEF1Byte(_ptr, _val)  (*((u8 *)(_ptr)))=EF1Byte(_val)
-#define WriteEF2Byte(_ptr, _val)  (*((u16 *)(_ptr)))=EF2Byte(_val)
-#define WriteEF4Byte(_ptr, _val)  (*((u32 *)(_ptr)))=EF4Byte(_val)
+#ifndef CONTAINER_OF
+#define CONTAINER_OF(ptr, type, member) \
+        ((type *)((char *)(ptr)-(SIZE_T)(&((type *)0)->member)))
+#endif
 
-//
-//  Example:
-//    BIT_LEN_MASK_32(0) => 0x00000000
-//    BIT_LEN_MASK_32(1) => 0x00000001
-//    BIT_LEN_MASK_32(2) => 0x00000003
-//    BIT_LEN_MASK_32(32) => 0xFFFFFFFF
-//
-#define BIT_LEN_MASK_32(__BitLen) \
-  (0xFFFFFFFF >> (32 - (__BitLen)))
-//
-//  Example:
-//    BIT_OFFSET_LEN_MASK_32(0, 2) => 0x00000003
-//    BIT_OFFSET_LEN_MASK_32(16, 2) => 0x00030000
-//
-#define BIT_OFFSET_LEN_MASK_32(__BitOffset, __BitLen) \
-  (BIT_LEN_MASK_32(__BitLen) << (__BitOffset))
+#define list_entry(ptr, type, member) \
+    CONTAINER_OF(ptr, type, member)
 
-//
-//  Description:
-//    Return 4-byte value in host byte ordering from
-//    4-byte pointer in litten-endian system.
-//
-#define LE_P4BYTE_TO_HOST_4BYTE(__pStart) \
-  (EF4Byte(*((u32 *)(__pStart))))
+#define list_first_entry(ptr, type, member) \
+        list_entry((ptr)->Next, type, member)
 
-//
-//  Description:
-//    Translate subfield (continuous bits in little-endian) of 4-byte value in litten byte to
-//    4-byte value in host byte ordering.
-//
-#define LE_BITS_TO_4BYTE(__pStart, __BitOffset, __BitLen) \
-  ( \
-    ( LE_P4BYTE_TO_HOST_4BYTE(__pStart) >> (__BitOffset) ) \
-    & \
-    BIT_LEN_MASK_32(__BitLen) \
-  )
+#define list_next_entry(pos, member, type) \
+        list_entry((pos)->member.Next, type, member)
 
-//
-//  Description:
-//    Mask subfield (continuous bits in little-endian) of 4-byte value in litten byte oredering
-//    and return the result in 4-byte value in host byte ordering.
-//
-#define LE_BITS_CLEARED_TO_4BYTE(__pStart, __BitOffset, __BitLen) \
-  ( \
-    LE_P4BYTE_TO_HOST_4BYTE(__pStart) \
-    & \
-    ( ~ BIT_OFFSET_LEN_MASK_32(__BitOffset, __BitLen) ) \
-  )
+#define list_for_each_entry(pos, head, member, type) \
+        for (pos = list_first_entry(head, type, member); \
+             &pos->member != (head); \
+             pos = list_next_entry(pos, member, type))
+#define list_for_each(pos, head) \
+        for (pos = (head)->Next; pos != (head); pos = pos->Next)
 
-//
-//  Description:
-//    Set subfield of little-endian 4-byte value to specified value.
-//
-#define SET_BITS_TO_LE_4BYTE(__pStart, __BitOffset, __BitLen, __Value) \
-  *((u32 *)(__pStart)) = \
-    EF4Byte( \
-      LE_BITS_CLEARED_TO_4BYTE(__pStart, __BitOffset, __BitLen) \
-      | \
-      ( (((u32)__Value) & BIT_LEN_MASK_32(__BitLen)) << (__BitOffset) ) \
-    );
+#define RTL_LIST_HEAD_INIT(name) { &(name), &(name) }
 
-#define BIT_LEN_MASK_16(__BitLen) \
-    (0xFFFF >> (16 - (__BitLen)))
+#define RTL_INIT_LIST_HEAD(ptr) do { \
+  (ptr)->Next = (ptr); (ptr)->Prev = (ptr); \
+} while (0)
 
-#define BIT_OFFSET_LEN_MASK_16(__BitOffset, __BitLen) \
-  (BIT_LEN_MASK_16(__BitLen) << (__BitOffset))
-
-#define LE_P2BYTE_TO_HOST_2BYTE(__pStart) \
-  (EF2Byte(*((u16 *)(__pStart))))
-
-#define LE_BITS_TO_2BYTE(__pStart, __BitOffset, __BitLen) \
-  ( \
-    ( LE_P2BYTE_TO_HOST_2BYTE(__pStart) >> (__BitOffset) ) \
-    & \
-    BIT_LEN_MASK_16(__BitLen) \
-  )
-
-#define LE_BITS_CLEARED_TO_2BYTE(__pStart, __BitOffset, __BitLen) \
-  ( \
-    LE_P2BYTE_TO_HOST_2BYTE(__pStart) \
-    & \
-    ( ~ BIT_OFFSET_LEN_MASK_16(__BitOffset, __BitLen) ) \
-  )
-
-#define SET_BITS_TO_LE_2BYTE(__pStart, __BitOffset, __BitLen, __Value) \
-  *((u16 *)(__pStart)) = \
-    EF2Byte( \
-      LE_BITS_CLEARED_TO_2BYTE(__pStart, __BitOffset, __BitLen) \
-      | \
-      ( (((u16)__Value) & BIT_LEN_MASK_16(__BitLen)) << (__BitOffset) ) \
-    );
-
-#define BIT_LEN_MASK_8(__BitLen) \
-    (0xFF >> (8 - (__BitLen)))
-
-#define BIT_OFFSET_LEN_MASK_8(__BitOffset, __BitLen) \
-  (BIT_LEN_MASK_8(__BitLen) << (__BitOffset))
-
-#define LE_P1BYTE_TO_HOST_1BYTE(__pStart) \
-  (EF1Byte(*((u8 *)(__pStart))))
-
-#define LE_BITS_TO_1BYTE(__pStart, __BitOffset, __BitLen) \
-  ( \
-    ( LE_P1BYTE_TO_HOST_1BYTE(__pStart) >> (__BitOffset) ) \
-    & \
-    BIT_LEN_MASK_8(__BitLen) \
-  )
-
-#define LE_BITS_CLEARED_TO_1BYTE(__pStart, __BitOffset, __BitLen) \
-  ( \
-    LE_P1BYTE_TO_HOST_1BYTE(__pStart) \
-    & \
-    ( ~BIT_OFFSET_LEN_MASK_8(__BitOffset, __BitLen) ) \
-  )
-
-#define SET_BITS_TO_LE_1BYTE(__pStart, __BitOffset, __BitLen, __Value) \
-  *((u8 *)(__pStart)) = \
-    EF1Byte( \
-      LE_BITS_CLEARED_TO_1BYTE(__pStart, __BitOffset, __BitLen) \
-      | \
-      ( (((u8)__Value) & BIT_LEN_MASK_8(__BitLen)) << (__BitOffset) ) \
-    );
-
-//pclint
-#define LE_BITS_CLEARED_TO_1BYTE_8BIT(__pStart, __BitOffset, __BitLen) \
-  ( \
-    LE_P1BYTE_TO_HOST_1BYTE(__pStart) \
-  )
-
-//pclint
-#define SET_BITS_TO_LE_1BYTE_8BIT(__pStart, __BitOffset, __BitLen, __Value) \
-{ \
-  *((pu1Byte)(__pStart)) = \
-    EF1Byte( \
-      LE_BITS_CLEARED_TO_1BYTE_8BIT(__pStart, __BitOffset, __BitLen) \
-      | \
-      ((u1Byte)__Value) \
-    ); \
+/*
+ * Insert a new entry between two known consecutive entries.
+ *
+ * This is only for internal list manipulation where we know
+ * the prev/next entries already!
+ */
+static __inline__ VOID __List_Add( IN struct LIST_HEADER * New, IN struct LIST_HEADER * Prev,
+  IN struct LIST_HEADER * Next )
+{
+  Next->Prev = New;
+  New->Next = Next;
+  New->Prev = Prev;
+  Prev->Next = New;
 }
 
-// Get the N-bytes aligment offset from the current length
-#define N_BYTE_ALIGMENT(__Value, __Aligment) ((__Aligment == 1) ? (__Value) : (((__Value + __Aligment - 1) / __Aligment) * __Aligment))
-
-typedef unsigned char BOOLEAN, *PBOOLEAN;
-
-#define TEST_FLAG(__Flag,__testFlag)    (((__Flag) & (__testFlag)) != 0)
-#define SET_FLAG(__Flag, __setFlag)     ((__Flag) |= __setFlag)
-#define CLEAR_FLAG(__Flag, __clearFlag)   ((__Flag) &= ~(__clearFlag))
-#define CLEAR_FLAGS(__Flag)         ((__Flag) = 0)
-#define TEST_FLAGS(__Flag, __testFlags)   (((__Flag) & (__testFlags)) == (__testFlags))
-
-/* Define compilor specific symbol */
-//
-// inline function
-//
-#if defined ( __ICCARM__ )
-#define __inline__                      inline
-#define __inline                        inline
-#define __inline_definition     //In dialect C99, inline means that a function's definition is provided
-//only for inlining, and that there is another definition
-//(without inline) somewhere else in the program.
-//That means that this program is incomplete, because if
-//add isn't inlined (for example, when compiling without optimization),
-//then main will have an unresolved reference to that other definition.
-
-// Do not inline function is the function body is defined .c file and this
-// function will be called somewhere else, otherwise there is compile error
-#elif defined ( __CC_ARM   )
-#define __inline__      __inline  //__linine__ is not supported in keil compilor, use __inline instead
-#define inline        __inline
-#define __inline_definition     // for dialect C99
-#elif defined   (  __GNUC__  )
-#define __inline__                      inline
-#define __inline                        inline
-#define __inline_definition   inline
-#endif
-
-//
-// pack
-//
-
-#if defined (__ICCARM__)
-
-#define RTW_PACK_STRUCT_BEGIN _Pragma( STRINGIFY(pack(1)))
-#define RTW_PACK_STRUCT_STRUCT
-#define RTW_PACK_STRUCT_END _Pragma( STRINGIFY(pack()))
-//#define RTW_PACK_STRUCT_USE_INCLUDES
-
-#elif defined (__CC_ARM)
-
-#define RTW_PACK_STRUCT_BEGIN __packed
-#define RTW_PACK_STRUCT_STRUCT
-#define RTW_PACK_STRUCT_END
-
-#elif defined (__GNUC__)
-
-#define RTW_PACK_STRUCT_BEGIN
-#define RTW_PACK_STRUCT_STRUCT __attribute__ ((__packed__))
-#define RTW_PACK_STRUCT_END
-
-#elif defined(PLATFORM_WINDOWS)
-
-#define RTW_PACK_STRUCT_BEGIN
-#define RTW_PACK_STRUCT_STRUCT
-#define RTW_PACK_STRUCT_END
-#define RTW_PACK_STRUCT_USE_INCLUDES
-#endif
-
-// for standard library
-#ifdef __ICCARM__
-#define __extension__   /* Ignore */
-#define __restrict      /* Ignore */
-#endif
-
-#ifdef __GNUC__
-#define __weak                  __attribute__((weak))
-#define likely(x)               __builtin_expect ((x), 1)
-#define unlikely(x)             __builtin_expect ((x), 0)
-#endif
-
-typedef struct _RAM_START_FUNCTION_
+/*
+ * Delete a list entry by making the prev/next entries
+ * point to each other.
+ *
+ * This is only for internal list manipulation where we know
+ * the prev/next entries already!
+ */
+static __inline__ VOID __List_Del( IN struct LIST_HEADER * Prev, IN struct LIST_HEADER * Next )
 {
-  VOID (*RamStartFun)( VOID );
-} RAM_START_FUNCTION, *PRAM_START_FUNCTION;
+  Next->Prev = Prev;
+  Prev->Next = Next;
+}
 
-typedef struct _RAM_FUNCTION_START_TABLE_
+/**
+ * ListDel - deletes entry from list.
+ * @entry: the element to delete from the list.
+ * Note: list_empty on entry does not return true after this, the entry is in an undefined state.
+ */
+static __inline__ VOID ListDel( IN struct LIST_HEADER *Entry )
 {
-  VOID (*RamStartFun)( VOID );
-  VOID (*RamWakeupFun)( VOID );
-  VOID (*RamPatchFun0)( VOID );
-  VOID (*RamPatchFun1)( VOID );
-  VOID (*RamPatchFun2)( VOID );
-} RAM_FUNCTION_START_TABLE, *PRAM_FUNCTION_START_TABLE;
+  __List_Del( Entry->Prev, Entry->Next );
+}
+
+/**
+ * ListDelInit - deletes entry from list and reinitialize it.
+ * @entry: the element to delete from the list.
+ */
+static __inline__ VOID ListDelInit( IN struct LIST_HEADER *Entry )
+{
+  __List_Del( Entry->Prev, Entry->Next );
+  RTL_INIT_LIST_HEAD( Entry );
+
+}
+
+/**
+ * ListEmpty - tests whether a list is empty
+ * @head: the list to test.
+ */
+static __inline__ u32 ListEmpty( IN struct LIST_HEADER *Head )
+{
+  return Head->Next == Head;
+}
+
+/**
+ * ListSplice - join two lists
+ * @list: the new list to add.
+ * @head: the place to add it in the first list.
+ */
+static __inline__ VOID ListSplice( IN struct LIST_HEADER *List, IN struct LIST_HEADER *Head )
+{
+  struct LIST_HEADER *First = List->Next;
+
+  if ( First != List )
+  {
+    struct LIST_HEADER *Last = List->Prev;
+    struct LIST_HEADER *At = Head->Next;
+
+    First->Prev = Head;
+    Head->Next = First;
+
+    Last->Next = At;
+    At->Prev = Last;
+  }
+}
+
+static __inline__ VOID ListAdd( IN struct LIST_HEADER *New, IN struct LIST_HEADER *head )
+{
+  __List_Add( New, head, head->Next );
+}
+
+static __inline__ VOID ListAddTail( IN struct LIST_HEADER *New, IN struct LIST_HEADER *head )
+{
+  __List_Add( New, head->Prev, head );
+}
+
+static __inline VOID RtlInitListhead( IN _LIST *list )
+{
+  RTL_INIT_LIST_HEAD( list );
+}
+
+/*
+ For the following list_xxx operations,
+ caller must guarantee the atomic context.
+ Otherwise, there will be racing condition.
+ */
+static __inline u32 RtlIsListEmpty( IN _LIST *phead )
+{
+  if ( ListEmpty( phead ) )
+    return _TRUE;
+  else
+    return _FALSE;
+}
+
+static __inline VOID RtlListInsertHead( IN _LIST *plist, IN _LIST *phead )
+{
+  ListAdd( plist, phead );
+}
+
+static __inline VOID RtlListInsertTail( IN _LIST *plist, IN _LIST *phead )
+{
+  ListAddTail( plist, phead );
+}
+
+static __inline _LIST *RtlListGetNext( IN _LIST *plist )
+{
+  return plist->Next;
+}
+
+static __inline VOID RtlListDelete( IN _LIST *plist )
+{
+  ListDelInit( plist );
+}
+
+extern _LONG_CALL_ROM_ char *_strncpy( char *dest, const char *src, size_t count );
+extern _LONG_CALL_ROM_ char *_strcpy( char *dest, const char *src );
+extern _LONG_CALL_ROM_ size_t _strlen( const char *s );
+extern _LONG_CALL_ROM_ size_t _strnlen( const char *s, size_t count );
+extern _LONG_CALL_ROM_ int _strcmp( const char *cs, const char *ct );
+extern _LONG_CALL_ROM_ int _strncmp( const char *cs, const char *ct, size_t count );
+extern _LONG_CALL_ROM_ int _sscanf( const char *buf, const char *fmt, ... );
+extern _LONG_CALL_ROM_ char *_strsep( char **s, const char *ct );
+extern _LONG_CALL_ROM_ char *skip_spaces( const char *str );
+extern _LONG_CALL_ROM_ int skip_atoi( const char **s );
+extern _LONG_CALL_ROM_ int _vsscanf( const char *buf, const char *fmt, va_list args );
+extern _LONG_CALL_ROM_ unsigned long long simple_strtoull( const char *cp, char **endp, unsigned int base );
+extern _LONG_CALL_ROM_ long simple_strtol( const char *cp, char **endp, unsigned int base );
+extern _LONG_CALL_ROM_ long long simple_strtoll( const char *cp, char **endp, unsigned int base );
+extern _LONG_CALL_ROM_ unsigned long simple_strtoul( const char *cp, char **endp, unsigned int base );
+extern _LONG_CALL_ROM_ const char *_parse_integer_fixup_radix( const char *s, unsigned int *base );
+extern _LONG_CALL_ROM_ unsigned int _parse_integer( const char *s, unsigned int base, unsigned long long *p );
+extern _LONG_CALL_ROM_ u64 div_u64( u64 dividend, u32 divisor );
+extern _LONG_CALL_ROM_ s64 div_s64( s64 dividend, s32 divisor );
+extern _LONG_CALL_ROM_ u64 div_u64_rem( u64 dividend, u32 divisor, u32 *remainder );
+extern _LONG_CALL_ROM_ s64 div_s64_rem( s64 dividend, s32 divisor, s32 *remainder );
+extern _LONG_CALL_ROM_ char *_strpbrk( const char *cs, const char *ct );
+extern _LONG_CALL_ROM_ char *_strchr( const char *s, int c );
+extern _LONG_CALL_ROM_ void prvStrCpy( IN u8 *pDES, IN const u8 *pSRC );
+extern _LONG_CALL_ROM_ u32 prvStrLen( IN const u8 *pSRC );
+extern _LONG_CALL_ROM_ u8 prvStrCmp( IN const u8 *string1, IN const u8 *string2 );
+extern _LONG_CALL_ROM_ u8* StrUpr( IN u8 *string );
+extern _LONG_CALL_ROM_ int prvAtoi( IN const char * s );
+extern _LONG_CALL_ROM_ const char * prvStrStr( IN const char * str1, IN const char * str2 );
+
+#ifndef strtoul
+#define strtoul(str, endp, base)       simple_strtoul(str, endp, base)
+#endif
+#ifndef strtol
+#define strtol(str, endp, base)        simple_strtol(str, endp, base)
+#endif
+
+VOID RtlMemcpy( VOID* dec, VOID* sour, u32 sz );
+u32 RtlMemcmp( VOID *dst, VOID *src, u32 sz );
+VOID RtlMemset( VOID *pbuf, u32 c, u32 sz );
+
+s8 *
+RtlStrncpy(
+    IN s8 *dest,
+    IN const s8 *src,
+    IN SIZE_T count
+);
+
+s8 *
+RtlStrcpy(
+    IN s8 *dest,
+    IN const s8 *src
+);
+
+SIZE_T
+RtlStrlen(
+    IN const s8 *s
+);
+
+SIZE_T
+RtlStrnlen(
+    IN const s8 *s,
+    IN SIZE_T count
+);
+
+int
+RtlStrcmp(
+    IN const s8 *cs,
+    IN const s8 *ct
+
+);
+
+int
+RtlStrncmp(
+    IN const s8 *cs,
+    IN const s8 *ct,
+    IN SIZE_T count
+);
+
+//
+// string operation
+//
+#define strlen(str)						prvStrLen((const u8*)str)
+#define strcmp(str1, str2)				prvStrCmp((const u8*)str1, (const u8*)str2)
+#define sscanf(src, format...)				//TODO
+#define strtok(str, delim)				prvStrTok(str, delim)
+#define strcpy(dst, src)					prvStrCpy((u8 *)dst, (const u8*)src)
+#define atoi(str)						prvAtoi(str)
+#define strstr(str1, str2)					prvStrStr(str1, str2)
+
+//
+// standard i/o
+//
+#define snprintf							DiagSnPrintf
+#define sprintf							prvDiagSPrintf
+#define printf 							prvDiagPrintf
+
+//
+// memory management
+//
+#define malloc 							pvPortMalloc
+#define free							vPortFree
+
+extern int __rtl_errno;
+
+void init_rom_libgloss_ram_map( void );
+
+//
+// RTL library functions for Libc::stdio
+//
+
+extern int rtl_printf(IN const char* fmt, ...);
+extern int rtl_vprintf( const char *fmt, void *param );
+extern int rtl_sprintf( char* str, const char* fmt, ... );
+extern int rtl_snprintf( char* str, size_t size, const char* fmt, ... );
+extern int rtl_vsnprintf( char *str, size_t size, const char *fmt, void *param );
+
+//
+// RTL library functions for string
+//
+
+extern void * rtl_memchr( const void * src_void, int c, size_t length );
+extern int rtl_memcmp( const void * m1, const void * m2, size_t n );
+extern void * rtl_memcpy( void * dst0, const void * src0, size_t len0 );
+extern void * rtl_memmove( void * dst_void, const void * src_void, size_t length );
+extern void * rtl_memset( void * m, int c, size_t n );
+extern char * rtl_strcat( char * s1, const char * s2 );
+extern char * rtl_strchr( const char *s1, int i );
+extern int rtl_strcmp( const char *s1, const char *s2 );
+extern char* rtl_strcpy( char *dst0, const char *src0 );
+extern size_t rtl_strlen( const char *str );
+extern char * rtl_strncat( char * s1, const char * s2, size_t n );
+extern int rtl_strncmp( const char *s1, const char *s2, size_t n );
+extern char * rtl_strncpy( char * dst0, const char * src0, size_t count );
+extern char * rtl_strstr( const char *searchee, const char *lookfor );
+extern char * rtl_strsep( char **source_ptr, const char *delim );
+extern char * rtl_strtok( char * s, const char * delim );
+
+//
+// RTL library functions for math
+//
+
+extern double rtl_fabs( double );
+extern float rtl_fabsf( float a );
+extern float rtl_cos_f32( float a );
+extern float rtl_sin_f32( float a );
+
+extern float rtl_fadd( float a, float b );
+extern float rtl_fsub( float a, float b );
+extern float rtl_fmul( float a, float b );
+extern float rtl_fdiv( float a, float b );
+
+extern int rtl_fcmplt( float a, float b );
+extern int rtl_fcmpgt( float a, float b );
+
+//
+// RTL eabi functions
+
+extern double rtl_ftod( float f );
+
+extern double rtl_ddiv( double a, double b );
+
+//
+// Macro Library Functions
+//
+
+typedef union
+{
+  float value;
+  u32 word;
+} ieee_float_shape_type;
+
+/* Get a 32 bit int from a float.  */
+
+#define GET_FLOAT_WORD(i,d)					\
+do {								\
+  ieee_float_shape_type gf_u;					\
+  gf_u.value = (d);						\
+  (i) = gf_u.word;						\
+} while (0)
+
+/* Set a float from a 32 bit int.  */
+
+#define SET_FLOAT_WORD(d,i)					\
+do {								\
+  ieee_float_shape_type sf_u;					\
+  sf_u.word = (i);						\
+  (d) = sf_u.value;						\
+} while (0)
+
+static inline
+float rtl_nanf( void )
+{
+  float x;
+
+  SET_FLOAT_WORD( x, 0x7fc00000 );
+  return x;
+}
+
+//
+// Library Test functions
+//
+
+extern int rtl_lib_test(IN u16 argc, IN u8 *argv[]);
+extern int rtl_math_test(IN u16 argc, IN u8 *argv[]);
+extern int rtl_string_test(IN u16 argc, IN u8 *argv[]);
+
+//
+// Macro functions
+//
+
+#undef dbg_printf
+#define dbg_printf(fmt, args...) \
+	     	rtl_printf("%s():%d : " fmt "\n", __FUNCTION__, __LINE__, ##args);
+
+#undef err_printf
+#define err_printf(fmt, args...) \
+	     	rtl_printf("%s():%d : " fmt "\n", __FUNCTION__, __LINE__, ##args);
+
 
 #ifdef __cplusplus
 }

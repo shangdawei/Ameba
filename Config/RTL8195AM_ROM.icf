@@ -81,3 +81,4 @@ place at start of ROM_DATA_region {
 place in APP_CODE_region { ro };
 place in APP_DATA_region { rw };
 
+include "RTL8195AM_V02.icf";
