@@ -1,4 +1,4 @@
-#include "rtl8195am_sdr.h"
+#include "rtl8195am_sdrc.h"
 
 #if 0
 #define HAL_SDR_WRITE32(addr, value32)  HAL_WRITE32(SDR_CTRL_BASE, addr, value32)

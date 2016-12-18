@@ -2022,10 +2022,10 @@
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_irq.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_log_uart.c</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_logu.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_log_uart.h</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_logu.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_macro.h</name>
@@ -2076,37 +2076,37 @@
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_rtos.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdio_device.c</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdiod.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdio_device.h</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdiod.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdio_host.c</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdioh.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdio_host.h</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdioh.h</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdr.c</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdrc.c</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdr.h</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_sdrc.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_section.h</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_spi.c</name>
+      </file>
+      <file>
+        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_spi.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_spic.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_spic.h</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_ssi.c</name>
-      </file>
-      <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_ssi.h</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\rtl8195am_system.c</name>
@@ -2151,7 +2151,7 @@
         <name>$PROJ_DIR$\..\..\Common\MCU\startup_RTL8195AM.s</name>
       </file>
       <file>
-        <name>$PROJ_DIR$\..\..\Common\MCU\system_rtl8195am.c</name>
+        <name>$PROJ_DIR$\..\..\Common\MCU\system_RTL8195AM.c</name>
       </file>
       <file>
         <name>$PROJ_DIR$\..\..\Common\MCU\system_RTL8195AM.h</name>

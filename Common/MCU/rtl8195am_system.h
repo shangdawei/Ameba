@@ -11,107 +11,101 @@ extern "C"
 #include "rtl8195am_macro.h"
 #include "rtl8195am_compiler.h"
 
-#define PinCtrl                                 HalPinCtrlRtl8195A
-extern _LONG_CALL_ u8 HalPinCtrlRtl8195A( IN u32 Function, IN u32 PinLocation, IN BOOL Operation );
+// =================================================================================================
+// Defines
+//
+#define MAX_BACKUP_SIZE                               129
+#define MAXFUNC                                       10
+#define FSTREG                                        0xFF
+#define REG_VDR_ANACK_CAL_CTRL                        0xA0
+#define PS_MASK                                       0xFFFFFFFF
+#define HWACT                                         0
+#define HWCG                                          1
+#define HWINACT                                       2
+#define UNDEF                                         3
+#define ALLMET                                        0xff
+#define SLP_STIMER                                    BIT0
+#define SLP_GTIMER                                    BIT1
+#define SLP_GPIO                                      BIT2
+#define SLP_WL                                        BIT3
+#define SLP_NFC                                       BIT4
+#define SLP_SDIO                                      BIT5
+#define SLP_USB                                       BIT6
+#define SLP_TIMER33                                   BIT7
+#define DSTBY_STIMER                                  BIT0
+#define DSTBY_NFC                                     BIT1
+#define DSTBY_TIMER33                                 BIT2
+#define DSTBY_GPIO                                    BIT3
+#define DS_TIMER33                                    BIT0
+#define DS_GPIO                                       BIT1
 
-//Function Index
-#define UART0       0
-#define UART1       1
-#define UART2       2
-#define SPI0        8
-#define SPI1        9
-#define SPI2        10
-#define SPI0_MCS    15
-#define I2C0        16
-#define I2C1        17
-#define I2C2        18
-#define I2C3        19
-#define I2S0        24
-#define I2S1        25
-#define PCM0        28
-#define PCM1        29
-#define ADC0        32
-#define DAC0        36
-#define DAC1        37
-#define SDIOD       64
-#define SDIOH       65
-#define USBOTG      66
-#define MII         88
-#define WL_LED      96
-#define WL_ANT0     104
-#define WL_ANT1     105
-#define WL_BTCOEX   108
-#define WL_BTCMD    109
-#define NFC         112
-#define PWM0        160
-#define PWM1        161
-#define PWM2        162
-#define PWM3        163
-#define ETE0        164
-#define ETE1        165
-#define ETE2        166
-#define ETE3        167
-#define EGTIM       168
-#define SPI_FLASH   196
-#define SDR         200
-#define JTAG        216
-#define TRACE       217
-#define LOG_UART    220
-#define LOG_UART_IR 221
-#define SIC         224
-#define EEPROM      225
-#define DEBUG       226
+// =================================================================================================
+// PinMux Function ID
+//
+typedef enum
+{
+  PINMUX_UART0 = 0UL,
+  PINMUX_UART1 = 1,
+  PINMUX_UART2 = 2,
+  PINMUX_SPI0 = 8,
+  PINMUX_SPI1 = 9,
+  PINMUX_SPI2 = 10,
+  PINMUX_SPI0_MCS = 15,
+  PINMUX_I2C0 = 16,
+  PINMUX_I2C1 = 17,
+  PINMUX_I2C2 = 18,
+  PINMUX_I2C3 = 19,
+  PINMUX_I2S0 = 24,
+  PINMUX_I2S1 = 25,
+  PINMUX_PCM0 = 28,
+  PINMUX_PCM1 = 29,
+  PINMUX_ADC0 = 32,
+  PINMUX_DAC0 = 36,
+  PINMUX_DAC1 = 37,
+  PINMUX_SDIOD = 64,
+  PINMUX_SDIOH = 65,
+  PINMUX_USBOTG = 66,
+  PINMUX_MII = 88,
+  PINMUX_WL_LED = 96,
+  PINMUX_WL_ANT0 = 104,
+  PINMUX_WL_ANT1 = 105,
+  PINMUX_WL_BTCOEX = 108,
+  PINMUX_WL_BTCMD = 109,
+  PINMUX_NFC = 112,
+  PINMUX_PWM0 = 160,
+  PINMUX_PWM1 = 161,
+  PINMUX_PWM2 = 162,
+  PINMUX_PWM3 = 163,
+  PINMUX_ETE0 = 164,
+  PINMUX_ETE1 = 165,
+  PINMUX_ETE2 = 166,
+  PINMUX_ETE3 = 167,
+  PINMUX_EGTIM = 168,
+  PINMUX_SPI_FLASH = 196,
+  PINMUX_SDR = 200,
+  PINMUX_JTAG = 216,
+  PINMUX_TRACE = 217,
+  PINMUX_LOG_UART = 220,
+  PINMUX_LOG_UART_IR = 221,
+  PINMUX_SIC = 224,
+  PINMUX_EEPROM = 225,
+  PINMUX_DEBUG = 226
+} SYS_PINMUX_ID;
 
-//Location Index(Pin Mux Selection)
-#define S0          0
-#define S1          1
-#define S2          2
-#define S3          3
+// =================================================================================================
+//PinMux Location Index (Pin Mux Selection)
+//
+typedef enum
+{
+  PINMUX_S0 = 0UL,
+  PINMUX_S1 = 1,
+  PINMUX_S2 = 2,
+  PINMUX_S3 = 3,
+} SYS_PINMUX_LOC;
 
-_LONG_CALL_ u8
-HalPinCtrlRtl8195A( IN u32 Function, IN u32 PinLocation, IN BOOL Operation );
-
-u8 GpioFunctionChk( IN u32 chip_pin, IN u8 Operation );
-
-u8
-FunctionChk( IN u32 Function, IN u32 PinLocation );
-
-#define MAX_BACKUP_SIZE 129
-#define MAXFUNC     10
-#define FSTREG      0xFF
-
-#define REG_VDR_ANACK_CAL_CTRL 0xA0
-
-#define PS_MASK 0xFFFFFFFF
-
-//pwr state
-#define HWACT    0
-#define HWCG     1
-#define HWINACT  2
-#define UNDEF    3
-#define ALLMET   0xff
-
-//SLP
-#define     SLP_STIMER    BIT0
-#define     SLP_GTIMER    BIT1
-#define     SLP_GPIO      BIT2
-#define     SLP_WL        BIT3
-#define     SLP_NFC       BIT4
-#define     SLP_SDIO      BIT5
-#define     SLP_USB       BIT6
-#define     SLP_TIMER33   BIT7
-
-//DSTBY
-#define     DSTBY_STIMER  BIT0
-#define     DSTBY_NFC     BIT1
-#define     DSTBY_TIMER33 BIT2
-#define     DSTBY_GPIO    BIT3
-
-//DS wake event
-#define DS_TIMER33 BIT0
-#define DS_GPIO    BIT1
-
-enum power_state_idx
+// =================================================================================================
+//
+typedef enum
 {
   ACT = 0,
   WFE = 1,
@@ -123,233 +117,66 @@ enum power_state_idx
   DSLP = 7,
   INACT = 8,
   MAXSTATE = 9
-};
+} SYS_POWERSTATE_INDEX;
 
-enum clk_idx
+typedef enum
 {
   ANACK = 0,
   A33CK = 1,
-};
+} SYS_CLOCK_INDEX;
 
-typedef struct _power_state_
+typedef struct
 {
-  u8 FuncIdx;
-  u8 PowerState;
-} POWER_STATE, *pPOWER_STATE;
+  uint8_t FuncIdx;
+  uint8_t PowerState;
+} SYS_PowerState, *SYS_PowerStatePtr;
 
-typedef struct _reg_power_state_
+typedef struct
 {
-  u8 FuncIdx;
-  u8 PwrState;
-} REG_POWER_STATE, *pPREG_POWER_STATE;
+  uint8_t FuncIdx;
+  uint8_t PwrState;
+} SYS_RegPowerState, *SYS_RegPowerStatePtr;
 
-#if 0
-typedef struct _power_state_
+#if ( 0 )
+typedef struct
 {
-  u8 FuncIdx;
-  u8 PowerState;
-  u32 ReqDuration;
-  u32 RegCount;
-  u32 RemainDuration;
-}POWER_STATE, *pPOWER_STATE;
+  uint8_t FuncIdx;
+  uint8_t PowerState;
+  uint32_t ReqDuration;
+  uint32_t RegCount;
+  uint32_t RemainDuration;
+}SYS_PowerState, *SYS_PowerStatePtr;
 
-typedef struct _reg_power_state_
+typedef struct
 {
-  u8 FuncIdx;
-  u8 PwrState;
-  u32 ReqDuration;
-  //u8 StateIdx;
-}REG_POWER_STATE, *pPREG_POWER_STATE;
+  uint8_t FuncIdx;
+  uint8_t PwrState;
+  uint32_t ReqDuration;
+  uint8_t StateIdx;
+}SYS_RegPowerState, *SYS_RegPowerStatePtr;
 #endif
 
-typedef struct _power_mgn_
+typedef struct
 {
-  u8 ActFuncCount;
-  POWER_STATE PwrState[ MAXFUNC ];
-  u8 CurrentState;
-  u8 SDREn;
-  u32 MSPbackup[ MAX_BACKUP_SIZE ];
-  u32 CPURegbackup[ 25 ];
-  u32 CPUPSP;
-  u32 WakeEventFlag;
+  uint8_t ActFuncCount;
+  SYS_PowerState PwrState[ MAXFUNC ];
+  uint8_t CurrentState;
+  uint8_t SDREn;
+  uint32_t MSPbackup[ MAX_BACKUP_SIZE ];
+  uint32_t CPURegbackup[ 25 ];
+  uint32_t CPUPSP;
+  uint32_t WakeEventFlag;
   BOOL SleepFlag;
-//u32         CPUReg[13];
-//u32         MSBackUp[128];
-} Power_Mgn, *pPower_Mgn;
+//uint32_t CPUReg[13];
+//uint32_t MSBackUp[128];
+} SYS_PowerMgn, *SYS_PowerMgnPtr;
 
-typedef struct _SYS_ADAPTER_
+typedef struct
 {
-  u8 function;
-} SYS_ADAPTER, *PSYS_ADAPTER;
+  uint8_t function;
+} SYS_Adapter, *SYS_AdapterPtr;
 
-extern Power_Mgn PwrAdapter;
-
-u8 ChangeSoCPwrState( IN u8 RequestState, IN u32 ReqCount );
-
-VOID PrintCPU( VOID );
-void WakeFromSLPPG( void );
-VOID SOCPSTestApp( VOID *Data );
-
-__inline static VOID CPURegBackUp(
-VOID
-)
-{
-#if defined (__ICCARM__)
-  // TODO: IAR has different way using assembly
-#elif defined (__GNUC__)
-  //backup cpu reg
-#if 0
-  asm volatile
-  (
-      "PUSH {PSR, PC, LR, R12,R3,R2,R1,R0}\n"
-  );
-#endif
-#if 0
-  asm volatile
-  (
-      "PUSH {r0,r1,r2,r3,r4}\n"
-  );
-#endif
-
-  asm volatile
-  (
-
-      "MOV %0, r0\n"
-      :"=r"(PwrAdapter.CPURegbackup[0])
-      ::"memory"
-  );
-
-  asm volatile
-  (
-      "MOV %0, r1\n"
-      :"=r"(PwrAdapter.CPURegbackup[1])
-      ::"memory"
-  );
-
-  asm volatile
-  (
-      "MOV %0, r2\n"
-      :"=r"(PwrAdapter.CPURegbackup[2])
-      ::"memory"
-  );
-
-  asm volatile
-  (
-      "MOV %0, r3\n"
-      :"=r"(PwrAdapter.CPURegbackup[3])
-      ::"memory"
-  );
-
-  asm volatile
-  (
-      "MOV %0, r4\n"
-      :"=r"(PwrAdapter.CPURegbackup[4])
-      ::"memory"
-  );
-
-  asm volatile
-  (
-      "MOV %0, r5\n"
-      :"=r"(PwrAdapter.CPURegbackup[5])
-      ::"memory"
-  );
-
-  asm volatile
-  (
-      "MOV %0, r6\n"
-      :"=r"(PwrAdapter.CPURegbackup[6])
-      ::"memory"
-  );
-
-  asm volatile
-  (
-      "MOV %0, r7\n"
-      :"=r"(PwrAdapter.CPURegbackup[7])
-      ::"memory"
-  );
-
-  asm volatile
-  (
-      "MOV %0, r8\n"
-      :"=r"(PwrAdapter.CPURegbackup[8])
-      ::"memory"
-  );
-
-  asm volatile
-  (
-      "MOV %0, r9\n"
-      :"=r"(PwrAdapter.CPURegbackup[9])
-      ::"memory"
-  );
-
-  asm volatile
-  (
-      "MOV %0, r10\n"
-      :"=r"(PwrAdapter.CPURegbackup[10])
-      ::"memory"
-  );
-
-  asm volatile
-  (
-      "MOV %0, r11\n"
-      :"=r"(PwrAdapter.CPURegbackup[11])
-      ::"memory"
-  );
-  asm volatile
-  (
-      "MOV %0, r12\n"
-      :"=r"(PwrAdapter.CPURegbackup[12])
-      ::"memory"
-  );
-
-  asm volatile
-  (
-      "MOV %0, r13\n"
-      :"=r"(PwrAdapter.CPURegbackup[13])
-      ::"memory"
-  );
-  asm volatile
-  (
-      //"MOV %0, r14\n"
-      "LDR %0, =SLPPG_WAKEUP_POINT\n"
-      "ADD %0, #1\n"
-      :"=r"(PwrAdapter.CPURegbackup[14])
-      ::"memory"
-  );
-  asm volatile
-  (
-      "LDR %0, =SLPPG_WAKEUP_POINT\n"
-      "ADD %0, #1\n"
-      :"=r"(PwrAdapter.CPURegbackup[15])
-      ::"memory"
-  );
-  asm volatile
-  (
-      "MRS %0, PSR\n"
-      :"=r"(PwrAdapter.CPURegbackup[16])
-      ::"memory"
-  );
-
-#if 1
-  asm volatile
-  (
-      "mov %0, r13\n"
-      "MOV %1, PC\n"
-      "MRS %2, CONTROL\n"
-      "MRS %3, PSP\n"
-      "MRS %4, MSP\n"
-      :"=r"(PwrAdapter.CPURegbackup[24]),"=r"(PwrAdapter.CPURegbackup[23]),"=r"(PwrAdapter.CPURegbackup[22]),"=r"(PwrAdapter.CPURegbackup[21]),"=r"(PwrAdapter.CPURegbackup[20])
-      ::"memory"
-  );
-#endif
-#ifdef CONFIG_SOC_PS_VERIFY
-  PrintCPU();
-#endif  //#ifdef CONFIG_SOC_PS_VERIFY
-#endif //#elif defined (__GNUC__)
-}
-
-VOID RegPowerState( REG_POWER_STATE RegPwrState );
-
+extern SYS_PowerMgn PwrAdapter;
 
 // -------------------------------------------------------------------------------------------------
 #define MASK_ALLON                          0xFFFFFFFF
@@ -360,7 +187,6 @@ VOID RegPowerState( REG_POWER_STATE RegPwrState );
 #define HAL_PERI_ON_WRITE16(addr, value)    HAL_WRITE16(RTL_SYS_BASE, addr, value)
 #define HAL_PERI_ON_READ8(addr)             HAL_READ8(RTL_SYS_BASE, addr)
 #define HAL_PERI_ON_WRITE8(addr, value)     HAL_WRITE8(RTL_SYS_BASE, addr, value)
-
 
 #define HAL_PERL_ON_FUNC_CTRL(addr,value,ctrl)  \
         HAL_PERI_ON_WRITE32(addr, ((HAL_PERI_ON_READ32(addr) & (~value))|((MASK_ALLON - ctrl + 1) & value)))
@@ -789,6 +615,20 @@ VOID RegPowerState( REG_POWER_STATE RegPwrState );
 #define EGTIME_PIN_G0_OPT_SEL(num) HAL_PERL_ON_PIN_SEL(REG_PERI_EGTIM_CTRL, (BIT_MASK_PERI_EGTIM_PIN_GROUP0_OPT_SEL << BIT_SHIFT_PERI_EGTIM_PIN_GROUP0_OPT_SEL), BIT_PERI_EGTIM_PIN_GROUP0_OPT_SEL(num))
 #define EGTIME_PIN_G1_OPT_SEL(num) HAL_PERL_ON_PIN_SEL(REG_PERI_EGTIM_CTRL, (BIT_MASK_PERI_EGTIM_PIN_GROUP1_OPT_SEL << BIT_SHIFT_PERI_EGTIM_PIN_GROUP1_OPT_SEL), BIT_PERI_EGTIM_PIN_GROUP1_OPT_SEL(num))
 #define EGTIME_PIN_G2_OPT_SEL(num) HAL_PERL_ON_PIN_SEL(REG_PERI_EGTIM_CTRL, (BIT_MASK_PERI_EGTIM_PIN_GROUP2_OPT_SEL << BIT_SHIFT_PERI_EGTIM_PIN_GROUP2_OPT_SEL), BIT_PERI_EGTIM_PIN_GROUP2_OPT_SEL(num))
+
+
+uint8_t GpioFunctionChk( IN uint32_t chip_pin, IN uint8_t Operation );
+uint8_t FunctionChk( IN uint32_t Function, IN uint32_t PinLocation );
+void RegPowerState( SYS_RegPowerState RegPwrState );
+uint8_t ChangeSoCPwrState( IN uint8_t RequestState, IN uint32_t ReqCount );
+void PrintCPU( void );
+void WakeFromSLPPG( void );
+void SOCPSTestApp( void *Data );
+void CPURegBackUp( void );
+
+void SYS_PinMux( SYS_PINMUX_ID Id, SYS_PINMUX_LOC Loc, uint32_t OnOff );
+void SYS_ClockCtrl( SYS_PINMUX_ID Id, SYS_PINMUX_LOC Loc, uint32_t OnOff );
+void SYS_PowerCtrl( SYS_PINMUX_ID Id, SYS_PINMUX_LOC Loc, uint32_t OnOff );
 
 #ifdef __cplusplus
 }

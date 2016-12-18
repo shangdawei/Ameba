@@ -1,5 +1,5 @@
-#ifndef __RTL8195AM_SSI_H__
-#define __RTL8195AM_SSI_H__
+#ifndef __RTL8195AM_SPI_H__
+#define __RTL8195AM_SPI_H__
 
 #ifdef __cplusplus
 extern "C"
@@ -872,4 +872,4 @@ HalSsiDmaInit(
 }
 #endif /* __cplusplus */
 
-#endif /* __RTL8195AM_SSI_H__ */
+#endif /* __RTL8195AM_SPI_H__ */

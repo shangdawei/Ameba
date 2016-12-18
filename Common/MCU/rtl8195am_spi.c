@@ -1,4 +1,4 @@
-#include "rtl8195am_ssi.h"
+#include "rtl8195am_spi.h"
 
 extern _LONG_CALL_
 HAL_STATUS HalSsiInitRtl8195a( VOID *Adaptor );
